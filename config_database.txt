@@ -1,0 +1,3 @@
+drv = "{Microsoft Access Driver (*.mdb, *.accdb)}"
+pwd = "pw"
+mdb = "c:/Felix/ORA/base_datos/BaseNueva/ora.mdb"

@@ -1,15 +1,15 @@
 import pyodbc
 import pandas as pd
 import numpy as np
-
 import logging
-
+from funciones_auxiliares import parse_config
 import matplotlib.pyplot as plt
 logging.basicConfig(filename='datos_historicos.log', level=logging.INFO)
 # General parameters to read database
-drv = '{Microsoft Access Driver (*.mdb, *.accdb)}'
-pwd = 'pw'
-mdb = 'c:/Felix/ORA/base_datos/BaseNueva/ora.mdb'
+config = parse_config('./config_database.txt')
+drv = config.get('drv')
+pwd = config.get('pwd')
+mdb = config.get('mdb')
 
 def get_DataFrame(SQL_string):
     cnxn = pyodbc.connect('DRIVER={};DBQ={};PWD={}'.format(drv, mdb, pwd))

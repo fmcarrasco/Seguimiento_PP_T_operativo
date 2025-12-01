@@ -6,6 +6,7 @@ import datetime as dt
 import matplotlib.pyplot as plt
 from class_operativa import class_operativa
 from plot_functions import precipitacion_plot_v2, temp_plot
+
 import sys
 
 
@@ -19,7 +20,7 @@ fecha = sys.argv[1]
 # ------------------------------------
 
 def get_data_estacion(nest):
-    dest = pd.read_excel('./historicos/Estaciones_Seguimiento_PP_T.xlsx')
+    dest = pd.read_excel('./datos/Estaciones_Seguimiento_PP_T.xlsx')
     nombre = dest.loc[dest.N_Plot == nest, 'Nombre' ].values
     provincia = dest.loc[dest.N_Plot == nest, 'Prov' ].values
     tipo_est = dest.loc[dest.N_Plot == nest, 'IdTipo'].values
@@ -31,7 +32,7 @@ from plot_functions import stat_temp_data
 start = time.time()
 f_dt = dt.datetime.strptime(fecha, '%d-%m-%Y')
 
-carpeta_figuras = './figuras/'
+carpeta_figuras = './figuras/' + f_dt.strftime('%Y%m%d') + '/'
 os.makedirs(carpeta_figuras, exist_ok=True)
 
 print(' --- Generando datos para seguimiento ---')
@@ -60,7 +61,7 @@ for estacion in a.temp_estaciones:
     dest['prov'] = prov
     dest['tipo'] = tipo
     fig, ax = temp_plot(f_dt, estacion, tx_fecha, tx, tm_fecha, tm, dest)
-    fig.savefig('./figuras/t_' + id + '.jpg')
+    fig.savefig(carpeta_figuras + 't_' + id + '.jpg')
     plt.close(fig)
 
 print(' --- Periodo seguimiento pp acum: ', pp1, ' hasta ', te2)
@@ -79,7 +80,7 @@ for estacion in a.pp_estaciones:
     fig, ax = precipitacion_plot_v2(a.fecha_final, estacion, datos, cdatos, dest)
     f_act = 'Actualizado el: ' + f_dt.strftime('%d/%m/%Y')
     fig.text(0.67, 0.95, f_act, fontsize=10)
-    fig.savefig('./figuras/pp_' + id + '.jpg')
+    fig.savefig(carpeta_figuras + 'pp_' + id + '.jpg')
     plt.close(fig)
 
 #estacion = 'chepes'

@@ -48,7 +48,6 @@ def precipitacion_plot_v2(fecha, estacion, datos, cdatos, dest):
     yrf = fhist.loc[estacion,'f_fin'].strftime('%Y')
     y = reordena_medianas(mediana.loc[estacion,:].to_numpy(), fecha.month)
     l_meses = get_label_pp(fecha)
-    print(l_meses)
     # Texto extra  ------------------------------------------------------
     str1 = u'Último reportado: ' + dest['u_act']
     str2 = dest['nombre'] + ', ' + dest['prov'] + '.\n' + 'Datos: ' + dest['tipo']
@@ -199,57 +198,3 @@ def temp_plot(fecha, estacion, x1, tx, x2, tm, dest):
               frameon=True, edgecolor='#000000', prop={'size': 8.5})
     return fig, ax
 
-
-
-
-
-def precipitacion_plot(fecha, estacion, datos, cdatos,
-                       freport='', nest='', prov='', tipo=''):
-    mediana = pd.read_excel(archivo_historico, sheet_name='pp_mediana', index_col=0)
-    fhist = pd.read_excel(archivo_historico, sheet_name='pp_fechas', index_col=0)
-    yri = fhist.loc[estacion,'f_inicio'].strftime('%Y')
-    yrf = fhist.loc[estacion,'f_fin'].strftime('%Y')
-    y = reordena_medianas(mediana.loc[estacion,:].to_numpy(), fecha.month)
-    l_meses = get_label_pp(fecha)
-    # Texto extra  ------------------------------------------------------
-    str1 = u'Último reportado: ' + freport
-    str2 = nest + ', ' + prov + '.\n' + 'Datos: ' + tipo
-    # -------- Comenzamos la figura ------
-    sbn.set(style='ticks', palette='muted', color_codes=True,
-            font_scale=0.8)
-    my_dpi = 96.
-    fig, ax = plt.subplots(nrows=1, ncols=1, sharex=True,
-                           sharey=False, facecolor='white',
-                           figsize=(542/my_dpi, 376/my_dpi), dpi=my_dpi)
-
-    x = np.arange(0, 13)
-    # Grafico de Medianas
-    label_hist = u'Mediana histórica (' + yri + '-' + yrf + ')'
-    ax.plot(x, y, marker='s', ms=4, ls='-.', lw=0.5, color='firebrick',
-            label=label_hist, zorder=2)
-    ax.bar(x, datos, color='#0991ed', width=0.9, alpha=.5, edgecolor='black',
-           label='Precipitaciones actuales acumuladas', zorder=1)
-    # Texto cantidad de interpolados
-    for xi, dato, conteo in zip(x, datos, cdatos):
-        if conteo > 0 and dato > 5.:
-            ax.text(xi, 0.95*dato, str(conteo), ha='center', va='top')
-        elif conteo > 0 and dato <5.:
-            ax.text(xi, 10, str(conteo), ha='center', va='top')
-    # Eje X -------------------------------------------------------------
-    ax.set_xlim([-1, 13])
-    ax.set_xticks(x)
-    ax.set_xticklabels(l_meses)
-    ax.tick_params(axis='both', labelsize=10)
-    # Eje Y -------------------------------------------------------------
-    ax.yaxis.grid(True, linestyle='--', zorder=0)
-    ax.set_ylabel('PP (mm)', fontsize=10)
-    # Texto
-    plt.gcf().text(0.67, 0.02, str1, fontsize=10)
-    plt.gcf().text(0.05, 0.01, str2, fontsize=10)
-    # Seteando posicion del eje -----------------------------------------
-    box = ax.get_position()
-    ax.set_position([box.x0, box.y0 + box.height * 0.1,
-                     box.width, box.height * 0.9])
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2,
-              frameon=True, edgecolor='#000000', prop={'size': 10})
-    return fig, ax

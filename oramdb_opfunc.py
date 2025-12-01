@@ -4,9 +4,12 @@ import numpy as np
 
 import logging
 # General parameters to read database
-drv = '{Microsoft Access Driver (*.mdb, *.accdb)}'
-pwd = 'pw'
-mdb = 'c:/Felix/ORA/base_datos/BaseNueva/ora.mdb'
+from funciones_auxiliares import parse_config
+
+config = parse_config('./config_database.txt')
+drv = config.get('drv')
+pwd = config.get('pwd')
+mdb = config.get('mdb')
 
 
 def pp_sql_string(id, idtipo, fecha_i, fecha_f, idemp=None):
